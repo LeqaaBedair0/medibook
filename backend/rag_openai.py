@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 """
 rag_openai.py
 Purpose: RAG System with OpenRouter API - Auto-detects language with INTERNAL TRANSLATION
 Now supports Arabic with high accuracy through internal translation!
 Includes greeting detection to avoid false matches!
 """
+=======
+>>>>>>> master
 
 import chromadb
 from chromadb.utils import embedding_functions
@@ -15,6 +18,7 @@ from deep_translator import GoogleTranslator
 
 from contextlib import contextmanager
 import sqlite3
+<<<<<<< HEAD
 
 @contextmanager
 def get_db():
@@ -29,6 +33,18 @@ def get_db():
 OPENROUTER_API_KEY = "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"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 path = r'D:\cli\data'
+=======
+from database import get_db, init_database
+from config import OPENROUTER_API_KEY, OPENROUTER_BASE_URL
+
+# rag_openai.py
+import chromadb
+# ... باقي الـ imports
+from config import OPENROUTER_API_KEY, OPENROUTER_BASE_URL, CHROMA_PATH
+
+# استبدل السطر القديم: path = r'D:\cli\data' بـ:
+path = CHROMA_PATH
+>>>>>>> master
 
 # Initialize translator
 translator = GoogleTranslator()
@@ -290,6 +306,256 @@ def get_specialty_arabic(specialty):
         'General Medicine': 'طب عام',
     }
     return arabic_names.get(specialty, 'طب عام')
+<<<<<<< HEAD
+=======
+def map_to_app_specialty(ai_detected):
+    """Convert AI detected specialty to match app's dropdown options"""
+    if not ai_detected:
+        return "Internal Medicine"
+    
+    val = ai_detected.lower().strip()
+    
+    # قاموس التحويل - يربط كلام الـ AI بالقيم الموجودة في الـ Dropdown
+    mapping = {
+        # Pediatrics (أطفال)
+        "pediatric": "Pediatrics",
+        "pediatrics": "Pediatrics",
+        "أطفال": "Pediatrics",
+        "اطفال": "Pediatrics",
+        "child": "Pediatrics",
+        "baby": "Pediatrics",
+        "kid": "Pediatrics",
+        
+        # Internal Medicine (باطنة)
+        "internal medicine": "Internal Medicine",
+        "internal": "Internal Medicine",
+        "باطنة": "Internal Medicine",
+        "طب باطني": "Internal Medicine",
+        
+        # Cardiology (قلب)
+        "cardiology": "Cardiology",
+        "قلب": "Cardiology",
+        "heart": "Cardiology",
+        "chest pain": "Cardiology",
+        
+        # Dermatology (جلدية)
+        "dermatology": "Dermatology",
+        "جلدية": "Dermatology",
+        "skin": "Dermatology",
+        "rash": "Dermatology",
+        
+        # Orthopedics (عظام)
+        "orthopedics": "Orthopedics",
+        "orthopedic": "Orthopedics",
+        "عظام": "Orthopedics",
+        "bone": "Orthopedics",
+        "joint": "Orthopedics",
+        
+        # ENT (أنف وأذن وحنجرة)
+        "ent": "ENT",
+        "ear nose throat": "ENT",
+        "أنف وأذن": "ENT",
+        "ear": "ENT",
+        "throat": "ENT",
+        
+        # Neurology (مخ وأعصاب)
+        "neurology": "Neurology",
+        "مخ وأعصاب": "Neurology",
+        "brain": "Neurology",
+        "nerve": "Neurology",
+        "headache": "Neurology",
+        "migraine": "Neurology",
+        
+        # Ophthalmology (عيون)
+        "ophthalmology": "Ophthalmology",
+        "eye": "Ophthalmology",
+        "عيون": "Ophthalmology",
+        "vision": "Ophthalmology",
+        
+        # Urology (مسالك بولية)
+        "urology": "Urology",
+        "مسالك بولية": "Urology",
+        "urinary": "Urology",
+        
+        # Gastroenterology (جهاز هضمي)
+        "gastroenterology": "Gastroenterology",
+        "جهاز هضمي": "Gastroenterology",
+        "stomach": "Gastroenterology",
+        "digest": "Gastroenterology",
+        
+        # Respiratory Medicine (صدرية)
+        "respiratory": "Respiratory Medicine",
+        "chest": "Respiratory Medicine",
+        "lung": "Respiratory Medicine",
+        "صدرية": "Respiratory Medicine",
+        "cough": "Respiratory Medicine",
+        
+        # Psychiatry (نفسية)
+        "psychiatry": "Psychiatry",
+        "نفسية": "Psychiatry",
+        "mental": "Psychiatry",
+        "anxiety": "Psychiatry",
+        "depression": "Psychiatry",
+        
+        # Infectious Disease (أمراض معدية)
+        "infectious": "Infectious Disease",
+        "infection": "Infectious Disease",
+        "أمراض معدية": "Infectious Disease",
+        "bacteria": "Infectious Disease",
+        "virus": "Infectious Disease",
+        
+        # General Medicine (طب عام)
+        "general medicine": "General Medicine",
+        "general": "General Medicine",
+        "طب عام": "General Medicine",
+        "family medicine": "General Medicine",
+    }
+    
+    # البحث عن المفتاح المناسب
+    for key, target in mapping.items():
+        if key in val:
+            print(f"🔄 Mapping: '{ai_detected}' → '{target}'")
+            return target
+    
+    # Fallback إلى Internal Medicine إذا لم يتم العثور على تطابق
+    print(f"⚠️ No mapping found for '{ai_detected}', defaulting to Internal Medicine")
+    return "Internal Medicine"
+
+
+
+
+def generate_medical_response_with_context(full_context, original_message, history):
+    """Generate medical response with conversation context"""
+    
+    user_language = detect_language(original_message)
+    print(f"\n🌐 Detected language: {'العربية' if user_language == 'arabic' else 'English'}")
+    
+    if is_greeting_or_non_medical(original_message, user_language):
+        print("👋 Greeting detected - returning friendly response")
+        return {
+            'success': True,
+            'ai_response': get_greeting_response(user_language),
+            'language': user_language,
+            'is_greeting': True,
+            'analysis': {
+                'disease': 'N/A',
+                'severity': 0,
+                'specialty': None,
+                'urgency': 'N/A',
+                'is_emergency': False
+            }
+        }
+    
+    print("🔍 Analyzing symptoms with conversation context...")
+    analysis = smart_medical_query(original_message, user_language)
+    
+    if analysis.get('most_critical'):
+        best_match = analysis['most_critical']
+        context = best_match.get('text', '')
+        disease = best_match.get('disease', 'Unknown')
+        severity = best_match.get('severity', 0)
+        specialty = best_match.get('specialty', 'General Medicine')
+        
+        if user_language == 'arabic':
+            urgency = get_urgency_arabic(severity)
+            specialty_display = get_specialty_arabic(specialty)
+        else:
+            urgency = get_urgency_english(severity)
+            specialty_display = specialty
+        
+        emergency_warning = analysis.get('emergency_alert') is not None
+    else:
+        context = "No matching disease found"
+        disease = "Not specified" if user_language == 'english' else "غير محدد"
+        severity = 0
+        specialty = None
+        specialty_display = "General Medicine" if user_language == 'english' else "طب عام"
+        urgency = get_urgency_arabic(0) if user_language == 'arabic' else get_urgency_english(0)
+        emergency_warning = False
+    
+    # استخدم الدالة المعدلة مع السياق
+    prompt = get_response_prompt_with_context(
+        user_language, context, disease, severity, 
+        specialty_display, urgency, emergency_warning, 
+        original_message, full_context
+    )
+    
+    print("🤖 Generating response with AI...")
+    ai_response = call_openrouter(prompt, user_language)
+    
+    # تنظيف الرد
+    if ai_response and len(ai_response) > 2:
+        if ai_response[0] == '"' and ai_response[-1] == '"':
+            ai_response = ai_response[1:-1]
+    
+    return {
+        'success': True,
+        'ai_response': ai_response,
+        'language': user_language,
+        'is_greeting': False,
+        'analysis': {
+            'disease': disease,
+            'severity': severity,
+            'specialty': specialty_display if specialty else None,
+            'urgency': urgency,
+            'is_emergency': emergency_warning
+        }
+    }
+
+
+def get_response_prompt_with_context(language, context, disease, severity, specialty, urgency, emergency_warning, user_input, full_context):
+    """Build prompt with conversation context - uses get_response_prompt from rag_openai"""
+    # استخدم الدالة من rag_openai مع السياق الإضافي
+    base_prompt = get_response_prompt(
+        language, context, disease, severity, 
+        specialty, urgency, emergency_warning, user_input
+    )
+    
+    # أضف السياق إذا موجود
+    if full_context:
+        if language == 'arabic':
+            context_section = f"\n\n**سياق المحادثة السابقة:**\n{full_context}\n"
+        else:
+            context_section = f"\n\n**Conversation Context:**\n{full_context}\n"
+        
+        # أدخل السياق في بداية الـ prompt
+        lines = base_prompt.split('\n')
+        if language == 'arabic':
+            insert_pos = 2  # بعد السطر الأول
+        else:
+            insert_pos = 2
+        lines.insert(insert_pos, context_section)
+        return '\n'.join(lines)
+    
+    return base_prompt
+
+def build_conversation_context(history, current_message, max_messages=6):
+    """Build conversation context from history for medical analysis"""
+    if not history:
+        return current_message
+    
+    recent_history = history[-max_messages:]
+    context_parts = []
+    
+    for msg in recent_history:
+        if msg.get('suggestedDoctors'):
+            continue
+        role = "Patient" if not msg.get('isBot', False) else "Assistant"
+        text = msg.get('text', '')
+        if len(text) > 500:
+            text = text[:500] + "..."
+        context_parts.append(f"{role}: {text}")
+    
+    context_parts.append(f"Patient (current): {current_message}")
+    context = "\n".join(context_parts)
+    
+    return f"""Previous conversation:
+{context}
+
+Based on the conversation above, analyze the patient's current symptoms and provide appropriate medical guidance."""
+
+
+>>>>>>> master
 
 def get_urgency_arabic(score):
     if score >= 9:
@@ -857,7 +1123,10 @@ def generate_medical_response(user_input, conversation_context=None):
     }
 
 
+<<<<<<< HEAD
 # ========== DYNAMIC RESPONSE GENERATOR (النسخة المحسنة - دعم طلب الدكاترة) ==========
+=======
+>>>>>>> master
 # ========== DYNAMIC RESPONSE GENERATOR (النسخة المحسنة والأكثر استقراراً) ==========
 def generate_dynamic_response_with_llm(conversation_context, user_message, history=None):
     """
@@ -989,6 +1258,35 @@ import re
 from deep_translator import GoogleTranslator
 
 
+<<<<<<< HEAD
+=======
+def get_automated_medical_context(patient_id):
+    try:
+        # الربط مع الداتابيز بتاعتك
+        conn = sqlite3.connect('medibook.db') 
+        cursor = conn.cursor()
+        
+        # بنجيب آخر تخصص المريض حجز فيه من جدول الـ appointments
+        # تأكد أن اسم الجدول 'appointments' واسم العمود 'specialty' و 'patient_id'
+        cursor.execute('''
+            SELECT specialty 
+            FROM appointments 
+            WHERE patient_id = ? 
+            ORDER BY appointment_date DESC LIMIT 1
+        ''', (patient_id,))
+        
+        result = cursor.fetchone()
+        conn.close()
+        
+        if result:
+            return result[0] # سيرجع مثلاً 'Cardiologist' أو 'Pediatrician'
+        return "General"
+    except Exception as e:
+        print(f"❌ Database Error: {e}")
+        return "General"
+
+
+>>>>>>> master
 def get_followup_prompt(history, current_symptoms, language='arabic'):
     """Enhanced prompt that knows the previous specialty"""
     
@@ -1315,6 +1613,7 @@ if __name__ == "__main__":
 
 
 __all__ = [
+<<<<<<< HEAD
     'check_intent_with_llm',
     'generate_medical_response',
     'generate_dynamic_response_with_llm',   # ← أضف هذا السطر
@@ -1327,4 +1626,25 @@ __all__ = [
     'get_urgency_english',
     'call_openrouter',
     'get_response_prompt'
+=======
+    generate_medical_response,
+    detect_language,
+    is_greeting_or_non_medical,
+    get_greeting_response,
+    smart_medical_query,
+    get_specialty_arabic,
+    get_urgency_arabic,
+    get_urgency_english,
+    call_openrouter,
+    check_intent_with_llm,
+    get_response_prompt,
+    generate_vip_personalized_response,
+    generate_dynamic_response_with_llm,
+    get_patient_history,
+    map_to_app_specialty,
+    build_conversation_context,
+    get_response_prompt_with_context,
+    generate_medical_response_with_context,
+    get_automated_medical_context
+>>>>>>> master
 ]
