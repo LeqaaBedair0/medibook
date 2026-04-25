@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "clinics": "العيادات",
+    "doctors": "الأطباء",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "adminPortal": "لوحة الإدارة",
+    "docPortal": "لوحة الطبيب",
+    "myPortal": "لوحتي"
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ!",
+    "tryAgain": "حاول مرة أخرى",
+    "clearFilters": "مسح كل الفلاتر",
+    "search": "بحث",
+    "filter": "تصفية",
+    "showing": "يظهر",
+    "doctors": "طبيب",
+    "noResults": "لم يتم العثور على أطباء تطابق بحثك",
+    "showAll": "عرض كل الأطباء",
+    "bookAppointment": "حجز موعد",
+    "reviews": "التقييمات",
+    "rating": "التقييم"
+  },
+  "doctors": {
+    "title": "ابحث عن أخصائي",
+    "searchResults": "نتائج البحث",
+    "specialty": "التخصص",
+    "filters": "الفلاتر",
+    "searchPlaceholder": "اسم الدكتور، التخصص، العيادة...",
+    "book": "حجز موعد",
+    "viewReviews": "عرض التقييمات",
+    "newDoctor": "جديد",
+    "noDoctors": "لم يتم العثور على أطباء تطابق بحثك",
+    "prices": {
+      "title": "الأسعار",
+      "consultation": "كشف أولي",
+      "followUp": "متابعة"
+    }
+  },
+  "auth": {
+    "loginRequired": "يرجى تسجيل الدخول أولاً لحجز موعد",
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم",
+    "role": "نوع الحساب"
+  },
+  "booking": {
+    "title": "حجز موعد جديد",
+    "selectDate": "اختر التاريخ",
+    "availableSlots": "المواعيد المتاحة",
+    "noSlots": "لا توجد مواعيد متاحة لهذا اليوم",
+    "tryOtherDate": "جرب تاريخ آخر أو تواصل مع الطبيب",
+    "all": "الكل",
+    "consultation": "كشف أولي",
+    "followUp": "متابعة",
+    "confirm": "تأكيد الحجز",
+    "booking": "جاري الحجز...",
+    "success": "تم حجز الموعد بنجاح!"
+  },
+  "reviews": {
+    "title": "التقييمات",
+    "noReviews": "لا توجد تقييمات بعد",
+    "beFirst": "كن أول من يقيم هذا الطبيب",
+    "ratingDistribution": "توزيع التقييمات",
+    "stars": "نجوم",
+    "writeReview": "كتابة تقييم",
+    "yourRating": "تقييمك",
+    "yourComment": "تعليقك",
+    "submit": "إرسال التقييم",
+    "alreadyReviewed": "تم التقييم",
+    "reviewed": "لقد قمت بتقييم هذا الموعد بالفعل"
+  },
+  "footer": {
+    "copyright": "© ٢٠٢٦ ميدي بوك. جميع الحقوق محفوظة.",
+    "about": "عن المنصة",
+    "contact": "اتصل بنا",
+    "privacy": "سياسة الخصوصية",
+    "terms": "شروط الخدمة"
+  }
+}

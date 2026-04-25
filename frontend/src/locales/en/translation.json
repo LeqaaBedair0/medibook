@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "home": "Home",
+    "clinics": "Clinics",
+    "doctors": "Doctors",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "adminPortal": "Admin Portal",
+    "docPortal": "Doctor Portal",
+    "myPortal": "My Portal"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error!",
+    "tryAgain": "Try Again",
+    "clearFilters": "Clear all filters",
+    "search": "Search",
+    "filter": "Filter",
+    "showing": "Showing",
+    "doctors": "doctors",
+    "noResults": "No doctors match your search",
+    "showAll": "Show all doctors",
+    "bookAppointment": "Book Appointment",
+    "reviews": "Reviews",
+    "rating": "Rating"
+  },
+  "doctors": {
+    "title": "Find a Specialist",
+    "searchResults": "Search Results",
+    "specialty": "Specialty",
+    "filters": "Filters",
+    "searchPlaceholder": "Doctor name, specialty, clinic...",
+    "book": "Book Appointment",
+    "viewReviews": "View Reviews",
+    "newDoctor": "New",
+    "noDoctors": "No doctors found matching your search",
+    "prices": {
+      "title": "Prices",
+      "consultation": "Consultation",
+      "followUp": "Follow-up"
+    }
+  },
+  "auth": {
+    "loginRequired": "Please login first to book an appointment",
+    "login": "Login",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "role": "Role"
+  },
+  "booking": {
+    "title": "Book New Appointment",
+    "selectDate": "Select Date",
+    "availableSlots": "Available Slots",
+    "noSlots": "No available slots for this day",
+    "tryOtherDate": "Try another date or contact the doctor",
+    "all": "All",
+    "consultation": "Initial Consultation",
+    "followUp": "Follow-up",
+    "confirm": "Confirm Booking",
+    "booking": "Booking...",
+    "success": "Appointment booked successfully!"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "noReviews": "No reviews yet",
+    "beFirst": "Be the first to review this doctor",
+    "ratingDistribution": "Rating Distribution",
+    "stars": "stars",
+    "writeReview": "Write a Review",
+    "yourRating": "Your Rating",
+    "yourComment": "Your Comment",
+    "submit": "Submit Review",
+    "alreadyReviewed": "Already Reviewed",
+    "reviewed": "You have already reviewed this appointment"
+  },
+  "footer": {
+    "copyright": "© 2026 MediBook. All rights reserved.",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  }
+}
