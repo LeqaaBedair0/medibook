@@ -1,17 +1,18 @@
-FROM python:3.10-slim
+# Use a lightweight Node.js image
+FROM node:18-alpine
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# تثبيت التبعيات الضرورية لـ ChromaDB
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package.json and install dependencies first (better caching)
+COPY package*.json ./
+RUN npm install --production
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+# Copy the rest of your backend code
 COPY . .
 
+# Expose the port your backend runs on (e.g., 5000)
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+# Command to run your app
+CMD ["npm", "start"]
