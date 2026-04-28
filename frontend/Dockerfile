@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to start your React app
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev", "--", "--host"]
