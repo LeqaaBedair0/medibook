@@ -21,7 +21,7 @@ function Chatbot({ doctorsList, onBookSelect }) {
   const navigate = useNavigate();
 
   // API Configuration
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://16.171.29.212:8000';
   const CHAT_ENDPOINT = `${API_BASE_URL}/chat`;
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

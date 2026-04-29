@@ -30,7 +30,7 @@ function Signup({ onSignup }) {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/signup', {
+      const res = await fetch('http://16.171.29.212:8000/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)

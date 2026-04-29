@@ -6,7 +6,7 @@ import DoctorCard from '../components/DoctorCard';
 import BookingModal from '../components/BookingModal';
 import { toast } from 'react-hot-toast';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'http://16.171.29.212:8000/api' });
 
 function Home() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);

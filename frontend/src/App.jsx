@@ -20,7 +20,7 @@ import Chatbot from "./components/Chatbot";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 
 // ✅ API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://16.171.29.212:8000';
 
 function App() {
   const { t, i18n } = useTranslation();

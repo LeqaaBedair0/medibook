@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // You can move this to a separate api file later (recommended)
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://16.171.29.212:8000/api',
   // withCredentials: true,    // only if you use cookies/sessions later
 });
 

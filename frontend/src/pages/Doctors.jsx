@@ -12,7 +12,7 @@ const SPECIALTIES_LIST = [
   "Internal Medicine", "Urology", "Radiology", "Anesthesiology", "Oncology", "Dentist"
 ];
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+const API = axios.create({ baseURL: 'http://16.171.29.212:8000/api' });
 
 function Doctors() {
   let auth;

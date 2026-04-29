@@ -17,7 +17,7 @@ function RatingModal({ isOpen, onClose, appointment, currentUser, onReviewSubmit
 
     setSubmitting(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/appointments/${appointment._id}/review`, {
+      const response = await fetch(`http://16.171.29.212:8000/api/appointments/${appointment._id}/review`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

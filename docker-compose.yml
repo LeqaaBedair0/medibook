@@ -5,7 +5,7 @@ services:
     build: ./backend
     container_name: my_backend
     ports:
-      - "8000:8000"
+      - "8000:5000"
     restart: always  # <-- Phase 10: High Availability
     environment:
       - NODE_ENV=production
@@ -15,7 +15,7 @@ services:
     build: ./frontend
     container_name: my_frontend
     ports:
-      - "3000:3000"
+      - "3000:5173"
     restart: always  # <-- Phase 10: High Availability
     depends_on:
       - backend      # Ensures backend starts before frontend

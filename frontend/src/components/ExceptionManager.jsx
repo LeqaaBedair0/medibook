@@ -45,7 +45,7 @@ function ExceptionManager({ isOpen, onClose, exceptions, onUpdate, doctorId, all
         payload.new_end_time = newException.new_end_time;
       }
 
-      const response = await fetch(`http://localhost:5000/api/doctor/${doctorId}/exceptions`, {
+      const response = await fetch(`http://16.171.29.212:8000/api/doctor/${doctorId}/exceptions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -77,7 +77,7 @@ function ExceptionManager({ isOpen, onClose, exceptions, onUpdate, doctorId, all
     if (!window.confirm('Are you sure you want to delete this exception?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/doctor/${doctorId}/exceptions/${exceptionId}`, {
+      const response = await fetch(`http://16.171.29.212:8000/api/doctor/${doctorId}/exceptions/${exceptionId}`, {
         method: 'DELETE'
       });
 
