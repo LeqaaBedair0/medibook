@@ -8,7 +8,7 @@ services:
       - "8000:5000"
     restart: always  # <-- Phase 10: High Availability
     environment:
-      - NODE_ENV=production
+      - OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
       # - MONGODB_URI=your_database_url_here (Add your environment variables here later)
     volumes:
       - ./medibook.db:/app/medibook.db  # This is the "Magic Line"
@@ -23,4 +23,4 @@ services:
     depends_on:
       - backend      # Ensures backend starts before frontend
     environment:
-      - NODE_ENV=production
+      - OPENROUTER_API_KEY=${{ secrets.OPENROUTER_API_KEY }}
