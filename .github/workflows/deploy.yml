@@ -15,6 +15,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          envs: OPENROUTER_API_KEY
           port: 22
           passphrase: ""
           script: |
@@ -26,3 +27,5 @@ jobs:
             # Restart the services
             docker compose down
             docker compose up -d --build
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
