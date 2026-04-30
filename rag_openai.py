@@ -650,7 +650,7 @@ def generate_medical_response(user_input, conversation_context=None):
 # ============ DYNAMIC RESPONSE WITH LLM (FIXED) ============
 def generate_dynamic_response_with_llm(conversation_context, user_message, history=None):
     """
-    نسخة محسنة وأكثر استقراراً لتصنيف الـ Intent
+    النسخة النهائية المتناسقة - تدعم التخصصات العربية والإنجليزية
     """
     if history is None:
         history = []
@@ -658,32 +658,34 @@ def generate_dynamic_response_with_llm(conversation_context, user_message, histo
     user_language = detect_language(user_message)
     user_message = user_message.strip()
 
+    # 1. تصنيف الرسالة + استخراج التخصص المباشر
     system_prompt = f"""
-أنت مصنف ذكي لرسائل المستخدمين في تطبيق حجز عيادات طبية يدعى MediBook.
+أنت مصنف ذكي لرسائل المستخدمين في تطبيق MediBook.
 
-**صنف الرسالة إلى واحد من الأنواع التالية فقط:**
-- "greeting": تحية بسيطة فقط (اهلا، مرحبا، ازيك، شكرا، تمام...).
-- "doctor_request": أي طلب يتعلق بحجز أو عرض أطباء أو دكاترة (احجز، دكتور، دكاترة، أطباء، عايز دكتور، قولي الدكاترة، أريني دكاترة...).
-- "medical": وصف أعراض أو شكوى صحية (عندي ألم، صداع، كحة، تعبان، وجع...).
-- "general": أي سؤال عادي آخر غير طبي (رياضيات، أسئلة عامة، "كنت عايز اسالك سوال", "5*5 بكام"...).
-
-**قواعد صارمة:**
-- أي رسالة تحتوي على كلمات "دكتور" أو "دكاترة" أو "احجز" أو "أطباء" → يجب أن تكون "doctor_request" حتى لو فيها تحية.
-- إذا كانت الرسالة تحتوي على أعراض طبية → "medical".
-- التحيات النقية فقط مثل "اهلا" أو "مرحبا" → "greeting".
-- أي سؤال غير طبي (حساب، معلومات عامة) → "general".
-
-**أرجع JSON صالح تماماً بهذا الشكل فقط، بدون أي نص إضافي:**
+صنف الرسالة إلى واحد من الأنواع التالية فقط وأرجع JSON صالح:
 
 {{
-  "type": "doctor_request",
-  "ai_response": "رد ودود ومناسب بالعربية",
-  "analysis": {{
-    "specialty": "Cardiology"
-  }}
+  "type": "greeting" | "doctor_request" | "medical" | "general",
+  "specialty": "اسم التخصص أو null",
+  "ai_response": "رد قصير مؤقت فقط لو greeting أو general"
 }}
 
-إذا لم يكن doctor_request، اجعل "analysis": {{}} 
+**قواعد صارمة للغاية:**
+- "doctor_request": أي كلام عن دكتور، دكاترة، حجز، أطباء، عايز دكتور، احجزلي دكتور
+- "medical": وصف أعراض أو شكوى صحية (صداع، ألم، كحة، تعبان، وجع، حرارة...)
+- "greeting": تحية بسيطة فقط (اهلا، مرحبا، ازيك، شكرا...)
+- "general": أي سؤال عادي غير طبي
+
+**استخراج التخصص (فقط للـ doctor_request):**
+- إذا قال "قلب" أو "Cardiology" أو "دكتور قلب" → specialty = "Cardiology"
+- إذا قال "أعصاب" أو "Neurology" أو "دكتور مخ واعصاب" → specialty = "Neurology"
+- إذا قال "عظام" أو "Orthopedics" → specialty = "Orthopedics"
+- إذا قال "أطفال" أو "Pediatrics" → specialty = "Pediatrics"
+- إذا قال "جلدية" أو "Dermatology" → specialty = "Dermatology"
+- إذا قال "نفسي" أو "Psychiatry" → specialty = "Psychiatry"
+- إذا لم يذكر تخصصاً محدداً → specialty = null
+
+أرجع JSON فقط بدون أي نص إضافي.
 """
 
     try:
@@ -698,17 +700,17 @@ def generate_dynamic_response_with_llm(conversation_context, user_message, histo
             "model": "openai/gpt-4o-mini",
             "messages": [
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": f"الرسالة من المستخدم: {user_message}"}
+                {"role": "user", "content": f"الرسالة: {user_message}"}
             ],
-            "temperature": 0.05,   # منخفضة جداً للدقة
-            "max_tokens": 450,
+            "temperature": 0.1,
+            "max_tokens": 300,
         }
 
         response = requests.post(
             f"{OPENROUTER_BASE_URL}/chat/completions",
             headers=headers,
             json=payload,
-            timeout=12
+            timeout=10
         )
 
         if response.status_code != 200:
@@ -716,52 +718,127 @@ def generate_dynamic_response_with_llm(conversation_context, user_message, histo
             raise Exception(f"Status code: {response.status_code}")
 
         content = response.json()['choices'][0]['message']['content'].strip()
-        print(f"Raw AI output: {content[:400]}...")
-
-        # تحسين استخراج الـ JSON (أقوى)
+        
         import re
         json_match = re.search(r'\{.*\}', content, re.DOTALL)
-        if json_match:
-            json_str = json_match.group(0)
-        else:
-            json_str = content
-
-        # تنظيف الـ JSON
+        json_str = json_match.group(0) if json_match else content
         json_str = json_str.strip().replace('\n', ' ').replace('```json', '').replace('```', '')
-
+        
         result = json.loads(json_str)
+        intent_type = result.get('type', 'general')
+        detected_specialty = result.get('specialty')
 
-        # Default values
-        result.setdefault('type', 'general')
-        result.setdefault('ai_response', "حاضر، تفضل قولي أكتر عشان أساعدك 👋")
+        print(f"✅ Intent detected: {intent_type} | Message: '{user_message[:60]}...'")
+        if detected_specialty:
+            print(f"🎯 Specialty detected: {detected_specialty}")
 
-        if not isinstance(result.get('analysis'), dict):
-            result['analysis'] = {}
+        # 2. توليد الرد حسب النوع
+        if intent_type == "medical":
+            print("🩺 Medical intent → Using full medical response system")
+            medical_result = generate_medical_response(user_message, conversation_context)
+            return {
+                'success': True,
+                'type': 'medical',
+                'ai_response': medical_result.get('ai_response', "عذراً، حدث خطأ في تحليل الأعراض. ممكن تكرر وصف الأعراض؟"),
+                'language': user_language,
+                'analysis': medical_result.get('analysis', {}),
+                'is_medical': True
+            }
 
-        # تحسين التخصص تلقائياً
-        if result.get('type') == 'doctor_request' and not result['analysis'].get('specialty'):
-            msg_lower = user_message.lower()
-            if 'cardiology' in msg_lower or 'قلب' in msg_lower or 'صدر' in msg_lower:
-                result['analysis']['specialty'] = 'Cardiology'
-            else:
-                result['analysis']['specialty'] = 'Internal Medicine'
+        elif intent_type == "doctor_request":
+            # ✅ استخراج التخصص من الرسالة مباشرة (خط دفاع إضافي)
+            extracted_specialty = detected_specialty
+            if not extracted_specialty:
+                # محاولة استخراج التخصص من النص مباشرة
+                msg_lower = user_message.lower()
+                
+                # خريطة الكلمات المفتاحية للتخصصات
+                specialty_map = {
+                    'cardiology': ['قلب', 'cardiology', 'دكتور قلب', 'أمراض القلب', 'القلب'],
+                    'neurology': ['أعصاب', 'neurology', 'دكتور أعصاب', 'مخ واعصاب', 'المخ'],
+                    'orthopedics': ['عظام', 'orthopedics', 'دكتور عظام', 'كسور', 'المفاصل'],
+                    'pediatrics': ['أطفال', 'pediatrics', 'دكتور أطفال', 'عيادة اطفال'],
+                    'dermatology': ['جلدية', 'dermatology', 'دكتور جلدية', 'حساسية جلدية'],
+                    'psychiatry': ['نفسي', 'psychiatry', 'دكتور نفسي', 'طب نفسي'],
+                    'internal_medicine': ['باطنة', 'internal medicine', 'دكتور باطنة', 'طب داخلي']
+                }
+                
+                for specialty, keywords in specialty_map.items():
+                    for keyword in keywords:
+                        if keyword in msg_lower:
+                            extracted_specialty = specialty
+                            print(f"🎯 Direct extraction: '{keyword}' → {specialty}")
+                            break
+                    if extracted_specialty:
+                        break
+            
+            # Fallback للتخصص
+            if not extracted_specialty:
+                extracted_specialty = "Internal Medicine"
+                print(f"⚠️ No specialty detected, fallback to: {extracted_specialty}")
+            
+            # تنسيق التخصص للعرض
+            specialty_display_ar = get_specialty_arabic(extracted_specialty) if 'get_specialty_arabic' in globals() else extracted_specialty
+            specialty_display_en = extracted_specialty
+            
+            print(f"✅ Final specialty: {extracted_specialty} → Arabic: {specialty_display_ar}")
+            
+            return {
+                'success': True,
+                'type': 'doctor_request',
+                'ai_response': f"حاضر، عايز دكتور في تخصص {specialty_display_ar}؟\n\nهل تحب أريك الدكاترة المتاحين دلوقتي؟ 👨‍⚕️",
+                'language': user_language,
+                'analysis': {'specialty': extracted_specialty, 'specialty_arabic': specialty_display_ar}
+            }
 
-        result['success'] = True
-        result['language'] = user_language
+        elif intent_type == "greeting":
+            return {
+                'success': True,
+                'type': 'greeting',
+                'ai_response': get_greeting_response(user_language),
+                'language': user_language,
+                'analysis': {}
+            }
 
-        print(f"✅ Dynamic LLM decided: type = {result.get('type')} | Specialty = {result['analysis'].get('specialty')}")
-        return result
+        else:  # general
+            return {
+                'success': True,
+                'type': 'general',
+                'ai_response': "فهمت طلبك. ممكن توضح أكثر عشان أقدر أساعدك بشكل أفضل؟\n\nإذا كنت تعاني من أعراض صحية، اكتبها لي لمساعدتك 🤝",
+                'language': user_language,
+                'analysis': {}
+            }
 
     except Exception as e:
         print(f"❌ Error in generate_dynamic_response_with_llm: {str(e)}")
-        if "Expecting" in str(e) or "JSON" in str(e):
-            print(f"Problematic content: {content[:500] if 'content' in locals() else 'N/A'}")
-
-        # Fallback قوي
+        
+        # Fallback ذكي مع استخراج التخصص من النص
+        extracted_specialty = None
+        msg_lower = user_message.lower()
+        
+        # Simple direct check
+        if 'قلب' in msg_lower or 'cardiology' in msg_lower:
+            extracted_specialty = 'Cardiology'
+        elif 'أعصاب' in msg_lower or 'neurology' in msg_lower:
+            extracted_specialty = 'Neurology'
+        elif 'عظام' in msg_lower or 'orthopedics' in msg_lower:
+            extracted_specialty = 'Orthopedics'
+        
+        if extracted_specialty:
+            specialty_ar = get_specialty_arabic(extracted_specialty) if 'get_specialty_arabic' in globals() else extracted_specialty
+            return {
+                'success': True,
+                'type': 'doctor_request',
+                'ai_response': f"حاضر، عايز دكتور في تخصص {specialty_ar}؟\n\nهل تحب أريك الدكاترة المتاحين دلوقتي؟ 👨‍⚕️",
+                'language': user_language,
+                'analysis': {'specialty': extracted_specialty}
+            }
+        
+        # Final fallback
         return {
             'success': True,
             'type': 'general',
-            'ai_response': "حاضر، ممكن توضح طلبك أكثر؟ 👋",
+            'ai_response': "عذراً، في مشكلة تقنية حالياً. لكن ممكن تكرر رسالتك؟ أنا هنا عشان أساعدك في الأعراض الصحية أو الحجز مع دكتور 🙏",
             'language': user_language,
             'analysis': {}
         }
