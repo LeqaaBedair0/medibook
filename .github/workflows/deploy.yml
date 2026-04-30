@@ -8,16 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd medibook
-          git pull
-          docker compose down
-          docker compose up -d --build
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3  # Updated to a newer version
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
+            # Navigate to the project directory
+            cd ~/medibook
+            
+            # Force Git to match the repository exactly
+            git fetch --all
+            git reset --hard origin/main
+            
+            # Restart the services
+            docker compose down
+            docker compose up -d --build
