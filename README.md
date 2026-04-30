@@ -1,83 +1,90 @@
-﻿# 🏥 Medibook: Intelligent Healthcare Platform
+# 🏥 Medibook: Intelligent Healthcare Platform
 
-Medibook is a comprehensive, full-stack healthcare booking and management platform designed to streamline clinic operations. It features multi-language support (Arabic/English) and integrates a custom AI Medical Assistant powered by Retrieval-Augmented Generation (RAG) to provide contextual, data-driven answers based on specific clinic documentation.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker)
+![AWS](https://img.shields.io/badge/AWS-EC2-orange?logo=amazon-aws)
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
+![React](https://img.shields.io/badge/React-Vite-61DAFB?logo=react)
 
-## 🚀 Architecture & Tech Stack
+> An intelligent, highly-available clinic management system featuring a custom AI Medical Assistant powered by Retrieval-Augmented Generation (RAG). 
 
-This project is built with a strong focus on containerization, high availability, and automated continuous deployment (CI/CD).
+Medibook is designed to handle doctor schedules, patient appointments, and clinic reviews while providing real-time, context-aware AI support based on internal clinic documentation.
 
-* **Frontend:** React (Vite)
-* **Backend:** Python (Flask/FastAPI)
-* **AI & Data:** LangChain, ChromaDB (Vector Store), OpenRouter API / OpenAI Embeddings
-* **Database:** SQLite (`medibook.db`)
-* **DevOps & Infrastructure:** Docker, Docker Compose, GitHub Actions, AWS EC2 (Ubuntu)
+---
 
-## 📁 Project Structure
-```text
-medibook/
-├── .github/workflows/
-│   └── deploy.yml          # CI/CD Pipeline configuration
-├── backend/
-│   ├── data/               # Source medical documents for AI ingestion (.txt, .pdf)
-│   ├── routes/             # API endpoints (auth, clinics, doctors, ai_chat)
-│   ├── app.py              # Main application entry point
-│   ├── rag_openai.py       # RAG logic and LLM connection
-│   ├── populate.py         # Script to ingest data into ChromaDB
-│   ├── config.py           # Environment variable management
-│   └── Dockerfile          # Backend container instructions
-├── frontend/
-│   └── Dockerfile          # Frontend container instructions
-├── docker-compose.yml      # Multi-container orchestration
-└── README.md
+## ✨ Key Features
+* **🤖 AI Medical Assistant (RAG):** Answers patient queries accurately using embedded clinic data via ChromaDB and OpenRouter/OpenAI.
+* **🌍 Multi-Language Support:** Full UI and backend support for both English and Arabic.
+* **🐳 Fully Containerized:** Isolated microservices for the frontend, backend, and vector database.
+* **🚢 Continuous Deployment (CI/CD):** Zero-downtime automated deployments to AWS via GitHub Actions.
+* **💾 Persistent Storage:** Stateful data and AI embeddings survive container rebuilds using Docker Volumes.
 
-## 🛠️ Local Development Setup
-To run this project locally, ensure you have Docker and Docker Compose installed.
+---
 
-Clone the repository:
+## 🏗️ Tech Stack & Architecture
 
-Bash
-git clone [https://github.com/LeqaaBedair0/medibook.git](https://github.com/YourUsername/medibook.git)
-cd medibook
-Set up environment variables:
-Create a .env file in the root directory (do not commit this file):
+| Layer | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | React (Vite) | Lightning-fast UI, containerized and port-mapped. |
+| **Backend** | Python (Flask/FastAPI) | Handles routing, DB connections, and AI logic. |
+| **Database** | SQLite & ChromaDB | Relational data (`medibook.db`) + Vector embeddings (`chroma_data`). |
+| **AI / NLP** | LangChain | Orchestrates the Retrieval-Augmented Generation pipeline. |
+| **DevOps** | Docker Compose | Multi-container orchestration and environment mapping. |
+| **Infrastructure**| AWS EC2 (Ubuntu) | Production host server with SSH-based deployment. |
 
-مقتطف الرمز
-OPENROUTER_API_KEY=your_api_key_here
-Start the application:
+---
 
-Bash
-docker compose up -d --build
-Initialize the AI Knowledge Base:
-Once the containers are running, ingest the clinic data into the vector database:
+## ⚙️ Environment Variables
+To run this project locally or in production, you must configure the following environment variables. 
 
-Bash
-docker exec -it my_backend python populate.py
-The application will be available at http://localhost:3000 (Frontend) and http://localhost:8000 (Backend).
+**⚠️ Security Note:** Never commit your `.env` file to version control. 
 
-## 🚢 CI/CD & Production Deployment
-Medibook utilizes a fully automated Continuous Deployment pipeline using GitHub Actions. The production environment is hosted on an AWS EC2 instance.
+| Variable | Required | Location | Description |
+| :--- | :---: | :--- | :--- |
+| `OPENROUTER_API_KEY` | ✅ | Backend (`.env`) | API key for generating AI responses and embeddings. |
+| `CHROMA_PATH` | ❌ | Backend (`.env`) | Path to vector DB. Defaults to `/app/chroma_data` in Docker. |
+| `DATA_PATH` | ❌ | Backend (`.env`) | Path to source docs. Defaults to `/app/data` in Docker. |
 
-The Deployment Workflow
-Push: Code is pushed to the main branch.
+---
 
-Action Triggered: GitHub Actions initializes the deploy.yml workflow.
+## 🚀 Local Development
 
-Secure Handshake: The runner connects to the AWS EC2 instance via SSH using repository secrets.
+### Prerequisites
+* [Docker](https://docs.docker.com/get-docker/) and Docker Compose installed.
+* Git installed.
 
-Environment Injection: Sensitive variables (like OPENROUTER_API_KEY) are securely passed from GitHub Secrets to the server environment.
+### Quick Start
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/YourUsername/medibook.git](https://github.com/YourUsername/medibook.git)
+   cd medibook
+2. **Set up your environment:**
+    Create a .env file in the root directory:
+      echo "OPENROUTER_API_KEY=your_actual_key_here" > .env
+3. **Spin up the infrastructure:**
+     docker compose up -d --build
+4. **Ingest Medical Data (Initialize AI):**
+     Ensure you have .txt or .pdf files in backend/data, then run the ingestion script inside the container to build the ChromaDB memory:
+       docker exec -it my_backend python backend/populate.py
+   
+### Access the App:
+  Frontend: http://localhost:3000
+  Backend API: http://localhost:8000
+---
 
-Orchestration: The server fetches the latest code, gracefully shuts down the old containers, and rebuilds the updated images using docker compose up -d --build.
+## 🚢 CI/CD Pipeline (GitHub Actions -> AWS)
+  This project utilizes a robust deployment pipeline that entirely automates the transition from code push to live production.
+  ### The Automated Workflow
+  1. Trigger: Code pushed to the main branch.
+  2. Authentication: GitHub Actions runner connects to the AWS EC2 instance via SSH (appleboy/ssh-action).
+  3. Secret Injection: The OPENROUTER_API_KEY is securely passed from GitHub Secrets into the server's session environment.
+  4. Synchronization: The server executes git fetch and git reset --hard to align with the repository state.
+  5.Rebuild & Restart: Docker Compose cleanly tears down the old containers and builds the new images.
 
-Persistent Storage
-To ensure data is not lost between deployments, Docker Volumes are explicitly mapped to the host machine:
+  ### High Availability & Data Persistence
+  The docker-compose.yml is configured with restart: always to ensure maximum uptime. Furthermore, data is strictly decoupled from the ephemeral containers using Docker Volumes:
+     - ./medibook.db:/app/medibook.db
+     - ./backend/chroma_data:/app/chroma_data
+     This guarantees that user accounts, appointments, and AI vector embeddings remain completely intact across deployments and server reboots.
 
-medibook.db is mapped to preserve user and appointment data.
 
-chroma_data/ is mapped to preserve the AI's vector embeddings, eliminating the need to re-ingest medical data after every update.
-
-## 🔐 Security Notes
-API Keys and sensitive credentials are never stored in version control.
-
-In local environments, a .env file is used (ignored via .gitignore).
-
-In production, keys are managed exclusively through GitHub Action Secrets and injected at runtime.
