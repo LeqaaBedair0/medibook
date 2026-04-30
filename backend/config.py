@@ -13,7 +13,7 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 if OPENROUTER_API_KEY:
     print(f"✅ API Key loaded in config.py (Length: {len(OPENROUTER_API_KEY.strip())})")
 else:
-    print(("❌ API Key NOT found in config.py!").env)
+    print("❌ API Key NOT found in config.py!")
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
