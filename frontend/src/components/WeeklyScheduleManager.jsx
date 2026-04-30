@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-const API_BASE = 'http://13.63.47.45:8000/api';
+const API_BASE = 'https://mediibook.duckdns.org/api';
 
 function WeeklyScheduleManager({ isOpen, onClose, doctorId, allClinics, onUpdate }) {
   const [schedules, setSchedules] = useState([]);           // كل الجداول لكل العيادات

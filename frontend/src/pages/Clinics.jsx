@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // You can move this to a separate api file later (recommended)
 const API = axios.create({
-  baseURL: 'http://13.63.47.45:8000/api',
+  baseURL: 'https://mediibook.duckdns.org/api',
   // withCredentials: true,    // only if you use cookies/sessions later
 });
 

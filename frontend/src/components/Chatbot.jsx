@@ -21,7 +21,7 @@ function Chatbot({ doctorsList, onBookSelect }) {
   const navigate = useNavigate();
 
   // API Configuration
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://13.63.47.45:8000';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://mediibook.duckdns.org';
   const CHAT_ENDPOINT = `${API_BASE_URL}/chat`;
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;

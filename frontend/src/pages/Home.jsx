@@ -6,7 +6,7 @@ import DoctorCard from '../components/DoctorCard';
 import BookingModal from '../components/BookingModal';
 import { toast } from 'react-hot-toast';
 
-const API = axios.create({ baseURL: 'http://13.63.47.45:8000/api' });
+const API = axios.create({ baseURL: 'https://mediibook.duckdns.org/api' });
 
 function Home() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);

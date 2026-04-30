@@ -51,7 +51,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchAllClinics = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/manager/clinics`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/manager/clinics`);
       const data = await response.json();
       if (response.ok) {
         setAllClinics(data);
@@ -68,7 +68,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchStats = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/quick-stats`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/quick-stats`);
       const data = await response.json();
       if (response.ok) {
         setStats(data);
@@ -84,7 +84,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchTodayAppointments = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/appointments/today`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/appointments/today`);
       const data = await response.json();
       if (response.ok) {
         setAppointments(data.appointments || []);
@@ -102,7 +102,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchWeeklySchedule = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/clinics`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/clinics`);
       const data = await response.json();
       
       if (response.ok) {
@@ -110,7 +110,7 @@ function Dashboard({ currentUser }) {
           data.map(async (clinic) => {
             try {
               const scheduleResponse = await fetch(
-                `http://13.63.47.45:8000/api/doctor/${currentUser.id}/clinics/${clinic._id}/weekly-schedule`
+                `https://mediibook.duckdns.org/api/doctor/${currentUser.id}/clinics/${clinic._id}/weekly-schedule`
               );
               if (scheduleResponse.ok) {
                 const scheduleData = await scheduleResponse.json();
@@ -145,7 +145,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchExceptions = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/exceptions`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/exceptions`);
       const data = await response.json();
       if (response.ok) {
         setExceptions(data.exceptions || []);
@@ -162,7 +162,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const fetchAvailableSlots = async () => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/available-slots`);
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/available-slots`);
       const data = await response.json();
       if (response.ok) {
         // تجميع المواعيد حسب التاريخ
@@ -199,7 +199,7 @@ function Dashboard({ currentUser }) {
       });
 
       const response = await fetch(
-        `http://13.63.47.45:8000/api/doctor/${currentUser.id}/all-appointments?${params}`
+        `https://mediibook.duckdns.org/api/doctor/${currentUser.id}/all-appointments?${params}`
       );
       const data = await response.json();
       
@@ -224,7 +224,7 @@ function Dashboard({ currentUser }) {
     if (!window.confirm('Delete this available slot?')) return;
     
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/doctor/${currentUser.id}/available-slots/${slotId}`, {
+      const response = await fetch(`https://mediibook.duckdns.org/api/doctor/${currentUser.id}/available-slots/${slotId}`, {
         method: 'DELETE'
       });
 
@@ -254,7 +254,7 @@ function Dashboard({ currentUser }) {
   // ================================================
   const handleStatusUpdate = async (appointmentId, status) => {
     try {
-      const response = await fetch(`http://13.63.47.45:8000/api/appointments/${appointmentId}/status`, {
+      const response = await fetch(`https://mediibook.duckdns.org/api/appointments/${appointmentId}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })

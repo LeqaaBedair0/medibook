@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const API_BASE = 'http://13.63.47.45:8000/api';
+const API_BASE = 'https://mediibook.duckdns.org/api';
 
 function ManagerClinicDetail() {
   const { id } = useParams();           // clinic_id من الـ URL

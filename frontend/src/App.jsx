@@ -20,7 +20,7 @@ import Chatbot from "./components/Chatbot";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 
 // ✅ API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://13.63.47.45:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://mediibook.duckdns.org';
 
 function App() {
   const { t, i18n } = useTranslation();
