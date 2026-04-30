@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
-const API_BASE = 'http://16.171.29.212:8000/api';
+const API_BASE = 'http://13.63.47.45:8000/api';
 
 function AvailabilityManager({ isOpen, onClose, doctorId, allClinics, onUpdate }) {
   const [availableSlots, setAvailableSlots] = useState([]);

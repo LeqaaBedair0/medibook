@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // You can move this to a separate api file later (recommended)
 const API = axios.create({
-  baseURL: 'http://16.171.29.212:8000/api',
+  baseURL: 'http://13.63.47.45:8000/api',
   // withCredentials: true,    // only if you use cookies/sessions later
 });
 

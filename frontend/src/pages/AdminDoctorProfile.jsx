@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const API_BASE = 'http://16.171.29.212:8000/api';
+const API_BASE = 'http://13.63.47.45:8000/api';
 
 function AdminDoctorProfile() {
   const { id } = useParams();

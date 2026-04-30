@@ -20,7 +20,7 @@ function Login({ onLogin }) {
     setErrorMessage('');
 
     try {
-      const response = await fetch('http://16.171.29.212:8000/api/login', {
+      const response = await fetch('http://13.63.47.45:8000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

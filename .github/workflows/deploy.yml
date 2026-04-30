@@ -16,14 +16,13 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: 22
+          passphrase: ""
           script: |
-            # Navigate to the project directory
+            # Nav igate to the project directory
             cd ~/medibook
-            
             # Force Git to match the repository exactly
             git fetch --all
             git reset --hard origin/main
-            
             # Restart the services
             docker compose down
             docker compose up -d --build
