@@ -1,5 +1,7 @@
 # 🏥 Medibook: Intelligent Healthcare Platform
 
+**Live Demo:** [https://mediibook.duckdns.org](https://mediibook.duckdns.org)
+
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker)
 ![AWS](https://img.shields.io/badge/AWS-EC2-orange?logo=amazon-aws)
@@ -29,8 +31,8 @@ Medibook is designed to handle doctor schedules, patient appointments, and clini
 | **Backend** | Python (Flask/FastAPI) | Handles routing, DB connections, and AI logic. |
 | **Database** | SQLite & ChromaDB | Relational data (`medibook.db`) + Vector embeddings (`chroma_data`). |
 | **AI / NLP** | LangChain | Orchestrates the Retrieval-Augmented Generation pipeline. |
-| **DevOps** | Docker Compose | Multi-container orchestration and environment mapping. |
-| **Infrastructure**| AWS EC2 (Ubuntu) | Production host server with SSH-based deployment. |
+| **DevOps** | Docker Compose | Multi-container orchestration and environment mapping | Reverse Proxy with Nginx. |
+| **Infrastructure**| AWS EC2 (Ubuntu) | Production host server with SSH-based deployment | Security & SSL HTTPS configured via Let's Encrypt (Certbot) | Domain Management DuckDNS Dynamic DNS. | 
 
 ---
 
